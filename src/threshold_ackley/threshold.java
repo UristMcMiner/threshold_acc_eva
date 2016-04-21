@@ -2,45 +2,43 @@ package threshold_ackley;
 
 public class threshold {
 	public static void main(String[] args) {
-		for(int k = 0; k<10; k++)
+		for(int k = 0; k<5; k++)
 			algo();
+		//bakanntes globales Minimum ausgeben:
+		double[]x = {0,0,0,0,0,0};
+		System.out.println(ackley_func.ackley_func(x));
 	}
 		public static void algo()
 		{
-			double[] c = {1, 1, 1, 1, 1, 1};
+			double[] c = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+			//double[] c = {1, 1, 1, 1, 1, 1};
 			int itr = 0;	//Iteration
-			int gitr = 10000;  //globale Iteration
-			int limit = 100;
-			double old = 0;
+			int gitr = 1000000;  //globale Iteration
+			int limit = 10000;
 			double thresh = 2;
 			double[] c_best = c;
 			int max = 40;
 			int min = -40;
 			
-			double del1 = 33; //KA
-			double u = 0.5; //KA
+			double del1 = 33; //Differenz
 			double fi = ack_fitness(ackley_func.ackley_func(c));
 			double fj = 0;
-			double acc = Math.pow(10,  -1);
-			double eps = 0.01;
-			double del2 = 0;
-			
+			double eps = 0.0001;
+
 			while(itr<gitr)
-			{
-				
+			{	
 				itr++;
 				int iitr = 0; //inner Iteration
-				while(iitr < limit && del1 > thresh)
+				while(iitr < limit)// && del1 > thresh)
 				{
 					iitr ++;
-//neue Config erstellen
-					deviation(c, 40, -40, u);
+					//	neue Config erstellen
+					deviation(c, max, min, eps);
 					
 					fj = ack_fitness(ackley_func.ackley_func(c));
 					del1 = fi - fj;
-					
 				}
-				if(del1 < thresh)
+				if(del1 < 0) //<thresh
 					fi = fj;
 
 				thresh = thresh * (1 - eps);
@@ -59,9 +57,9 @@ public class threshold {
 			double[] result = input;
 			for(int i = 0; i < input.length; i++)
 			{
-				result[i] = input[i] + (Math.random()*2-1)*0.1;
-				if(result[i]>40)result[i]=-40;
-				if(result[i]<-40)result[i]=40;
+				result[i] = input[i] + (Math.random()*2-1)*u;
+				if(result[i]>max)result[i]=max;
+				if(result[i]<min)result[i]=min;
 			}
 			return result;
 		}
