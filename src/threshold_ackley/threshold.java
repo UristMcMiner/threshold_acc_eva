@@ -2,19 +2,21 @@ package threshold_ackley;
 
 public class threshold {
 	public static void main(String[] args) {
-		algo();
+		for(int k = 0; k<10; k++)
+			algo();
 	}
 		public static void algo()
 		{
 			double[] c = {1, 1, 1, 1, 1, 1};
 			int itr = 0;	//Iteration
-			int gitr = 20;  //globale Iteration
+			int gitr = 10000;  //globale Iteration
+			int limit = 100;
 			double old = 0;
 			double thresh = 2;
 			double[] c_best = c;
 			int max = 40;
 			int min = -40;
-			int limit = 20;
+			
 			double del1 = 33; //KA
 			double u = 0.5; //KA
 			double fi = ack_fitness(ackley_func.ackley_func(c));
@@ -25,19 +27,18 @@ public class threshold {
 			
 			while(itr<gitr)
 			{
-				System.out.println(itr);
+				
 				itr++;
 				int iitr = 0; //inner Iteration
 				while(iitr < limit && del1 > thresh)
 				{
 					iitr ++;
-					for(int i = 0; i < c.length; i++)
-					{
-						c[i] = c[i] + (max-min)* Math.pow((2*u-1), i);
-					}
+//neue Config erstellen
+					deviation(c, 40, -40, u);
+					
 					fj = ack_fitness(ackley_func.ackley_func(c));
 					del1 = fi - fj;
-					System.out.println(iitr);
+					
 				}
 				if(del1 < thresh)
 					fi = fj;
@@ -46,9 +47,6 @@ public class threshold {
 			}
 			System.out.println(ackley_func.ackley_func(c_best));
 			System.out.println("{"+c_best[0]+","+c_best[1]+","+c_best[2]+","+c_best[3]+","+c_best[4]+","+c_best[5]+"}");
-			System.out.println(ackley_func.ackley_func(c));
-			System.out.println("{"+c_best[0]+","+c[1]+","+c[2]+","+c[3]+","+c[4]+","+c[5]+"}");
-			
 		}
 		
 		public static int ack_fitness(double val){
@@ -56,4 +54,16 @@ public class threshold {
 			int x = (int) ((1 - (val/30)) * 1000);
 			return x;
 		}
+		
+		public static double[] deviation(double[] input, int max, int min, double u){
+			double[] result = input;
+			for(int i = 0; i < input.length; i++)
+			{
+				result[i] = input[i] + (Math.random()*2-1)*0.1;
+				if(result[i]>40)result[i]=-40;
+				if(result[i]<-40)result[i]=40;
+			}
+			return result;
+		}
+		
 }
