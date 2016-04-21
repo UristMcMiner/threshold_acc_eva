@@ -10,11 +10,11 @@ public class threshold {
 	}
 		public static void algo()
 		{
-			double[] c = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
-			//double[] c = {1, 1, 1, 1, 1, 1};
+			//double[] c = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+			double[] c = {1, 1, 1, 1, 30, 6};
 			int itr = 0;	//Iteration
-			int gitr = 1000000;  //globale Iteration
-			int limit = 10000;
+			int gitr = 100000;  //globale Iteration
+			int limit = 100;
 			double thresh = 2;
 			double[] c_best = c;
 			int max = 40;
@@ -24,6 +24,7 @@ public class threshold {
 			double fi = ack_fitness(ackley_func.ackley_func(c));
 			double fj = 0;
 			double eps = 0.0001;
+			double stepsize = 0.0001;
 
 			while(itr<gitr)
 			{	
@@ -33,7 +34,7 @@ public class threshold {
 				{
 					iitr ++;
 					//	neue Config erstellen
-					deviation(c, max, min, eps);
+					deviation(c, max, min, stepsize);
 					
 					fj = ack_fitness(ackley_func.ackley_func(c));
 					del1 = fi - fj;
@@ -41,7 +42,7 @@ public class threshold {
 				if(del1 < 0) //<thresh
 					fi = fj;
 
-				thresh = thresh * (1 - eps);
+				thresh = thresh * (eps);
 			}
 			System.out.println(ackley_func.ackley_func(c_best));
 			System.out.println("{"+c_best[0]+","+c_best[1]+","+c_best[2]+","+c_best[3]+","+c_best[4]+","+c_best[5]+"}");
@@ -55,12 +56,13 @@ public class threshold {
 		
 		public static double[] deviation(double[] input, int max, int min, double u){
 			double[] result = input;
-			for(int i = 0; i < input.length; i++)
-			{
+			int i = (int) (Math.random()*5);
+			//for(int i = 0; i < input.length; i++)
+			//{
 				result[i] = input[i] + (Math.random()*2-1)*u;
-				if(result[i]>max)result[i]=max;
-				if(result[i]<min)result[i]=min;
-			}
+				if(result[i]>max)result[i]=min;
+				if(result[i]<min)result[i]=max;
+			//}
 			return result;
 		}
 		
