@@ -15,10 +15,12 @@ public class main_fba {
 		
 		double[] start = {1,1,1,1,1,1};
 		int dim = 6;
-		int t = 2000;
+		double t = 0.000001;
 		int max = 40;
 		int min = -40;
 		double u = 0.5;
+		double old_val = 30;
+		double value = 30;
 		int de = 0;
 		int qual = 0;
 		int iterations = 50000000;
@@ -27,10 +29,29 @@ public class main_fba {
 		highest_value = lowest_value;
 		lowest_deviation = start;
 		highest_deviation = start;
-		for(int i = 0; i < iterations; i++){
-			deviated = deviation(deviated, max, min, u);
-			qual = ack_fitness(ackley_func.ackley_func(deviated));
-			de = 
+		deviated = deviation(deviated, max, min, u);
+		int count_quality_change = 10000;
+		best_fitness = ack_fitness(ackley_func.ackley_func(start));
+		while( lowest_value > t ){
+			int no_change = 0;
+			old_val = value;
+			value = ackley_func.ackley_func(deviated);
+			q_old = ack_fitness(old_val);
+			q_new = ack_fitness(value);			
+			de = q_new - q_old;
+			System.out.println(de);
+			if(q_new < lowest_val){
+			
+			}else if(de > 0){
+				lowest_value = value;
+			}else if(de == 0){
+				no_change++;
+				if(no_change >= count_quality_change){
+					t = t + 0.000001;
+					no_change = 0;
+				}
+			}
+			
 			
 			
 		}
@@ -44,12 +65,10 @@ public class main_fba {
 
 	public static double[] deviation(double[] input, int max, int min, double u){
 		double[] result = input;
-		for(int i = 0; i < input.length; i++)
-		{
-			result[i] = input[i] + (Math.random()*2-1)*0.1;
+		int i = (int) (Math.random()*5)+1;
+			result[i] = input[i] * (Math.Random()*0.2 + 0.9);
 			if(result[i]>40)result[i]=-40;
 			if(result[i]<-40)result[i]=40;
-		}
 		return result;
 	}
 	
