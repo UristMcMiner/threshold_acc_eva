@@ -49,7 +49,7 @@ public class threshold_new {
 				System.out.println("Better fitness found/within threshold: " + cnt_alterations);
 				System.out.println("Fitness " + c.fitness());
 				System.out.println(t);
-				System.out.println(c.toString());
+				//System.out.println(c.toString());
 				
 				cnt_no_alterations = 0;
 			}
