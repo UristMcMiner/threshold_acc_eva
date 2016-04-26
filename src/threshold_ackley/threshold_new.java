@@ -13,7 +13,8 @@ public class threshold_new {
 		int max_cnt_no_alterations = 1000000000;
 		int dimensions = 6;
 		double t = 0.01;
-		double t_f = 0.1;
+		double t_f = 0.01;
+		double best_fitness = 0;
 		System.out.println("Starting threshold: " + t);
 		System.out.println("Threshold scaling factor: " + t_f);
 		
@@ -22,37 +23,42 @@ public class threshold_new {
 		
 		rng = new Random();
 		candidate c_start = new candidate(dimensions);
+		//candidate c_start = candidate.getNearZeroConfig();
 		candidate c = new candidate(new double[6]);
 		System.out.println("Starting config:");
 		System.out.println(c.toString());
+		best_fitness = c_start.fitness();
 		
 		//Counters
 		int cnt_no_alterations = 0;
 		int cnt_alterations = 0;
 		int cnt_iterations = 0;
 		//EOF Counters
-		
+		c_start.copy_vals(c);
 		while(cnt_no_alterations < max_cnt_no_alterations){
 			cnt_iterations++;
 			
-			c_start.copy_vals(c);
+			//c_start.copy_vals(c);
 			c.alter_config();
 			
-			if(c_start.fitness() - c.fitness() > (-t) && c_start.fitness() != 0){
+			if(((c_start.fitness() - c.fitness()) > (t)) && c_start.fitness()-c.fitness() != 0){
 				cnt_alterations++;
+				c.copy_vals(c_start);
 				clear_screen();
 				System.out.println('\n'+ "Iteration "+cnt_iterations);
 				System.out.println("Better fitness found/within threshold: " + cnt_alterations);
 				System.out.println("Fitness " + c.fitness());
-//				System.out.println(c.toString());
+				System.out.println(t);
+				System.out.println(c.toString());
 				
 				cnt_no_alterations = 0;
 			}
 			else{
 				cnt_no_alterations++;
+				//System.out.println("NOP");
 			}
 			
-			if(cnt_iterations % 10000 == 0){
+			if(cnt_iterations % 500000 == 0){
 				t = t * t_f;
 			}		
 		}
@@ -83,7 +89,7 @@ class candidate {
 		double[] val = new double[dim];
 		
 		for(int i = 0; i < dim; i++){
-			val[i] = threshold_new.rng.nextDouble() * 40;
+			val[i] = threshold_new.rng.nextDouble() * 80 - 40;
 		}
 		
 		this.val = val;
@@ -94,7 +100,11 @@ class candidate {
 			copy_to.val[i] = this.val[i];
 		}
 	}
+	public static candidate getNearZeroConfig(){
+		
+    return new candidate( new double[] { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 });
 	
+	}
 	public double fitness(){
 		return ackley();
 	}
@@ -111,11 +121,15 @@ class candidate {
 				- Math.exp(sum2 /((double )this.val.length))+ 20 + Math.exp(1.0);
 	}
 	
+	public void alter_config_diff(){
+		
+	}
+	
 	public void alter_config(){
 		int i = threshold_new.rng.nextInt(6);
 		double old_val = this.val[i];
 		while(old_val == this.val[i]){
-			this.val[i] = threshold_new.rng.nextDouble() * 40;
+			this.val[i] = threshold_new.rng.nextDouble() * (40 - (-40)) - 40;
 		}
 	}
 	
