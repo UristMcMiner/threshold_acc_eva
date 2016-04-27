@@ -14,7 +14,6 @@ public class threshold_new {
 		int dimensions = 6;
 		double t = 0.01;
 		double t_f = 0.01;
-		double best_fitness = 0;
 		System.out.println("Starting threshold: " + t);
 		System.out.println("Threshold scaling factor: " + t_f);
 		
@@ -27,7 +26,6 @@ public class threshold_new {
 		candidate c = new candidate(new double[6]);
 		System.out.println("Starting config:");
 		System.out.println(c.toString());
-		best_fitness = c_start.fitness();
 		
 		//Counters
 		int cnt_no_alterations = 0;
@@ -38,7 +36,7 @@ public class threshold_new {
 		while(cnt_no_alterations < max_cnt_no_alterations){
 			cnt_iterations++;
 			
-			//c_start.copy_vals(c);
+			c_start.copy_vals(c);
 			c.alter_config();
 			
 			if(((c_start.fitness() - c.fitness()) > (t)) && c_start.fitness()-c.fitness() != 0){
